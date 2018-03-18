@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity(name="categories")
+@Entity(name = "categories")
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -18,8 +18,13 @@ public class Category {
     int id;
 
     @NonNull
+    @Column(unique = true, nullable = false, length = 150)
     String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "category")
     List<Question> questions;
+
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
+    Subject subject;
 }

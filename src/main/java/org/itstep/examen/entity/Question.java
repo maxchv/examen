@@ -16,8 +16,10 @@ public class Question {
     int id;
 
     @NonNull
+    @Column(length = 1000)
     String content;
 
     @ManyToOne
+    @JoinColumn(name = "category_id")
     Category category;
 }

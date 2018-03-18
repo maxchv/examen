@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Questions</title>
+</head>
+<body>
+
+<div class="container" layout:fragment="content">
+    <h1>All Questions</h1>
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <thead class="table-dark">
+                <tr >
+                    <th>#</th>
+                    <th>Question</th>
+                    <th>Category</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="q: ${questions}">
+                    <td th:text="${q.id}"></td>
+                    <td th:text="${q.content}"></td>
+                    <td th:text="${q.getCategory().name}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

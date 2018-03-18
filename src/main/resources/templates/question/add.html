@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Question</title>
+</head>
+<body>
+
+<div class="container" layout:fragment="content">
+    <h1>Add question</h1>
+    <div class="row">
+        <div class="col">
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse"
+                                    data-target="#collapseOne"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                Add one
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+
+                            <form method="post" th:object="${question}">
+                                <div class="form-group">
+                                    <label for="subject">Subject</label>
+                                    <select class="form-control" id="subject">
+                                        <option value="0">--</option>
+                                        <option th:each="subject: ${subjects}"
+                                                th:text="${subject.name}" th:value="${subject.id}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="category">Category</label>
+                                    <select class="form-control" id="category"
+                                            disabled
+                                            th:field="*{category.id}">
+                                        <option value="0">--</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="content">Content</label>
+                                    <textarea type="text" class="form-control"
+                                              disabled="disabled"
+                                              th:field="*{content}"
+                                              id="content" placeholder="Enter your question"></textarea>
+                                    <small class="form-text text-danger"
+                                           th:if="${#fields.hasErrors('content')}"
+                                           th:errors="*{content}">Incorrect content
+                                    </small>
+                                </div>
+
+                                <button class="btn btn-primary" type="submit">Save</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse"
+                                    data-target="#collapseTwo"
+                                    aria-expanded="false" aria-controls="collapseTwo">
+                                Upload questions
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body">
+                            <form th:action="@{/questions/upload}" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="subjectUpload">Subject</label>
+                                    <select class="form-control" id="subjectUpload">
+                                        <option value="0">--</option>
+                                        <option th:each="subject: ${subjects}"
+                                                th:text="${subject.name}" th:value="${subject.id}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="categoryUpload">Category</label>
+                                    <select class="form-control" id="categoryUpload"
+                                            disabled="disabled">
+                                        <option value="0">--</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="file">File</label>
+                                    <input disabled="disabled" name="file" id="file" type="file" class="form-control"/>
+                                </div>
+                                <button class="btn btn-primary" type="submit">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div th:text="${uploadMessage}"></div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="footer">
+    <script>
+        $(function () {
+            function formBehavior(subject, category, content) {
+                subject.change(function (e) {
+                    let subject = $(this).find(':selected');
+                    if (subject.val() !== '0') {
+                        let url = `/api/v1/categories/search/bySubject?subjectId=${subject.val()}`;
+                        $.get(url, function (data) {
+                            console.dir(data);
+                            let allCategory = data._embedded.categories;
+                            if (allCategory && allCategory.length > 0) {
+                                category.empty();
+                                for (let c of allCategory) {
+                                    let href = c._links.self.href;
+                                    let id = href.substr(href.lastIndexOf('/') + 1);
+                                    $(`<option value='${id}'>${c.name}</option>`)
+                                        .appendTo(category);
+                                }
+                                category.change();
+                                category.prop('disabled', false);
+                            }
+                        }).fail(function (err) {
+                            console.log("error");
+                            console.dir(err);
+                        });
+                    } else {
+                        category.prop('disabled', true);
+                    }
+                });
+
+                category.change(function () {
+                    let category = $(this).find(":selected");
+                    if (category.val() !== '0') {
+                        content.prop('disabled', false);
+                    } else {
+                        content.prop('disabled', true);
+                    }
+                });
+            }
+
+            formBehavior($('#subject'), $("#category"), $('#content'));
+            formBehavior($('#subjectUpload'), $("#categoryUpload"), $('#file'));
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $('#categoryUpload').change(function () {
+                let categoryId = $(this).find(':selected').val();
+                if(categoryId !== '0') {
+                    $(this).closest('form').attr('action', `/questions/upload/${categoryId}`);
+                }
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

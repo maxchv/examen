@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Examen</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+</head>
+<body>
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <a class="navbar-brand" th:href="@{/}">Examen</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <!--<li class="nav-item dropdown">-->
+                <!--<a class="nav-link dropdown-toggle" th:href="@{/subjects}" id="navbarDropdownSubject"-->
+                   <!--role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                    <!--Subjects-->
+                <!--</a>-->
+                <!--<div class="dropdown-menu" aria-labelledby="navbarDropdownSubject">-->
+                    <!--<a class="dropdown-item" th:href="@{/subjects}">All subjects</a>-->
+                    <!--<a class="dropdown-item" th:href="@{/subjects/add}">Add subject</a>-->
+                <!--</div>-->
+            <!--</li>-->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" th:href="@{/questions}" id="navbarDropdownQuestion"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Questions
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownQuestion">
+                    <a class="dropdown-item" th:href="@{/questions}">All questions</a>
+                    <a class="dropdown-item" th:href="@{/questions/random}">Random questions</a>
+                    <!--<a class="dropdown-item" th:href="@{/questions/add}">Add question</a>-->
+                </div>
+            </li>
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link" th:href="@{/h2-console}">H2 Console</a>-->
+            <!--</li>-->
+        </ul>
+    </div>
+</nav>
+
+<div class="container" layout:fragment="content">
+
+</div>
+
+
+
+<script th:src="@{/webjars/jquery/jquery.js}"></script>
+<script th:src="@{/webjars/popper.js/popper.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<div layout:fragment="footer"></div>
+</body>
+</html>
