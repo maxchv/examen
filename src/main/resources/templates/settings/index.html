@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{template.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Subjects</title>
+</head>
+<body>
+
+<div class="container" layout:fragment="content">
+    <h1>Settings</h1>
+    <div class="row">
+        <div class="col">
+            <form method="post">
+                <div class="form-group" th:each="category: ${categories}">
+                    <input class="form-control" th:id="${'category' + category.getId()}" type="checkbox"
+                           th:value="${category.getName()}" th:name="${'categories[' + categoryStat.index + ']'}"/>
+                    <label th:for="${'category' + category.getId()}" th:text="${category.getName()}"></label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
