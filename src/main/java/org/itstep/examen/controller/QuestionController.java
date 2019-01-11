@@ -1,11 +1,11 @@
 package org.itstep.examen.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.itstep.examen.entity.Category;
 import org.itstep.examen.entity.Question;
 import org.itstep.examen.repository.CategoryRepository;
 import org.itstep.examen.repository.QuestionRepository;
 import org.itstep.examen.repository.SubjectRepository;
+import org.itstep.examen.settings.GeneralSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,28 +15,27 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Stream;
+import java.util.*;
 
 @Controller
 @RequestMapping("/questions")
 public class QuestionController {
 
-    Random random = new Random();
+    private final Random random = new Random();
 
     @Autowired
-    QuestionRepository questionRepository;
+    private GeneralSettings settings;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private QuestionRepository questionRepository;
 
     @Autowired
-    SubjectRepository subjectRepository;
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     @GetMapping(value={"", "/index"})
     public String index(Model model) {
@@ -123,11 +122,18 @@ public class QuestionController {
     @GetMapping("/random")
     public String random(Model model) {
         Iterable<Category> categories = categoryRepository.findAll();
-        List<Question> randomQuestions = new ArrayList<>();
-        for(Category category : categories) {
-            List<Question> q = category.getQuestions();
-            if(q.size() > 0 ) {
-                randomQuestions.add(q.get(random.nextInt(q.size())));
+        Set<Question> randomQuestions = new HashSet<>();
+        while(randomQuestions.size() < settings.getQuestionsCount()) {
+            for (Category category : categories) {
+                if (category.isEnabled()) {
+                    List<Question> q = category.getQuestions();
+                    if (q.size() > 0) {
+                        randomQuestions.add(q.get(random.nextInt(q.size())));
+                    }
+                }
+                if(randomQuestions.size() >= settings.getQuestionsCount()) {
+                    break;
+                }
             }
         }
         model.addAttribute("randomQuestions", randomQuestions);

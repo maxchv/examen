@@ -1,9 +1,6 @@
 package org.itstep.examen.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,6 +8,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString(exclude = "category")
 public class Question {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;

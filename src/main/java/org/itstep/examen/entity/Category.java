@@ -1,9 +1,6 @@
 package org.itstep.examen.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -13,22 +10,23 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@ToString(exclude = "subject")
 public class Category {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-  @NonNull
-  @Column(unique = true, nullable = false, length = 150)
-  private String name;
+    @NonNull
+    @Column(unique = true, nullable = false, length = 150)
+    private String name;
 
-  @OneToMany(mappedBy = "category")
-  private List<Question> questions;
+    @OneToMany(mappedBy = "category")
+    private List<Question> questions;
 
-  @ManyToOne
-  @JoinColumn(name = "subject_id")
-  private Subject subject;
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
 
-  @ColumnDefault("1")
-  private boolean enabled = true;
+    @ColumnDefault("1")
+    private boolean enabled = true;
 }
